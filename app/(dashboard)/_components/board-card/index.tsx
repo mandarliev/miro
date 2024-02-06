@@ -22,6 +22,9 @@ import Overlay from "./overlay";
 import { useAuth } from "@clerk/nextjs";
 import Footer from "./footer";
 import Actions from "@/components/actions";
+import useApiMutation from "@/hooks/use-api-mutation";
+import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 function BoardCard({
   id,
@@ -38,6 +41,22 @@ function BoardCard({
   const createdAtLabel = formatDistanceToNow(createdAt, {
     addSuffix: true,
   });
+
+  const { mutate: onFavorite, pending: pendingFavorite } = useApiMutation(
+    api.board.favorite
+  );
+  const { mutate: onUnfavorite, pending: pendingUnfavorite } = useApiMutation(
+    api.board.unfavorite
+  );
+
+  const toggleFavorite = () => {
+    if (isFavorite) {
+      onUnfavorite({ id }).catch(() => toast.error("Failed to unfavorite"));
+    } else {
+      onFavorite({ id, orgId }).catch(() => toast.error("Failed to favorite"));
+    }
+  };
+
   return (
     <Link href={`/board/${id}`}>
       <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden">
@@ -56,8 +75,8 @@ function BoardCard({
           title={title}
           authorLabel={authorLabel}
           createdAtLabel={createdAtLabel}
-          onClick={() => {}}
-          disabled={false}
+          onClick={toggleFavorite}
+          disabled={pendingFavorite || pendingUnfavorite}
         />
       </div>
     </Link>
