@@ -48,7 +48,7 @@ export type PathLayer = {
   value?: string;
 };
 
-export type TextLater = {
+export type TextLayer = {
   type: LayerType.Text;
   x: number;
   y: number;
@@ -127,4 +127,4 @@ export enum CanvasMode {
   Pencil,
 }
 
-export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLater | NoteLayer;
+export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLayer | NoteLayer;
